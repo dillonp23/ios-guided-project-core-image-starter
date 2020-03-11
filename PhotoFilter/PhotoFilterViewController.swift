@@ -1,6 +1,7 @@
 import UIKit
 import CoreImage
 import Photos
+import CoreImage.CIFilterBuiltins
 
 class PhotoFilterViewController: UIViewController {
 
@@ -9,12 +10,35 @@ class PhotoFilterViewController: UIViewController {
 	@IBOutlet weak var saturationSlider: UISlider!
 	@IBOutlet weak var imageView: UIImageView!
     
-    var originalImage: UIImage?
-	
-	override func viewDidLoad() {
-		super.viewDidLoad()
-
-	}
+    var originalImage: UIImage? {
+        didSet {
+            updateImage()
+        }
+    }
+    
+    private let context = CIContext()
+    private let filter = CIFilter.colorControls()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        originalImage = imageView.image
+    }
+    
+    private func image(byFiltering image: UIImage) -> UIImage {
+        // Do something interesting!
+        return image
+    }
+    
+    private func updateImage() {
+        if let originalImage = originalImage {
+            imageView.image = image(byFiltering: originalImage)
+        }
+        else {
+            imageView.image = nil
+        }
+        
+    }
 	
 	// MARK: Actions
 	
