@@ -9,13 +9,15 @@ class PhotoFilterViewController: UIViewController {
 	@IBOutlet weak var contrastSlider: UISlider!
 	@IBOutlet weak var saturationSlider: UISlider!
 	@IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var blurSlider: UISlider!
+    
     
     var originalImage: UIImage? {
         didSet {
             guard let originalImage = originalImage else { return }
             
             var scaledSize = imageView.bounds.size
-            let scale: CGFloat = 0.5 // UIScreen.main.scale - for every 2 points we have a pixel
+            let scale = UIScreen.main.scale // : CGFloat = 0.5 - for every 2 points we have a pixel
             
             scaledSize = CGSize(width: scaledSize.width * scale, height: scaledSize.height * scale)
             
@@ -35,6 +37,7 @@ class PhotoFilterViewController: UIViewController {
     
     private let context = CIContext()
     private let colorControlsFilter = CIFilter.colorControls()
+    private let blurFilter = CIFilter.gaussianBlur()
    
     
     override func viewDidLoad() {
@@ -50,9 +53,12 @@ class PhotoFilterViewController: UIViewController {
         colorControlsFilter.brightness = brightnessSlider.value
         colorControlsFilter.contrast = contrastSlider.value
         
-        guard let outputImage = colorControlsFilter.outputImage else { return UIImage(ciImage: inputImage) }
+        blurFilter.inputImage = colorControlsFilter.outputImage?.clampedToExtent()
+        blurFilter.radius = blurSlider.value
         
-        guard let renderedImage = context.createCGImage(outputImage, from: outputImage.extent) else { return UIImage(ciImage: inputImage) }
+        guard let outputImage = blurFilter.outputImage else { return UIImage(ciImage: inputImage) }
+        
+        guard let renderedImage = context.createCGImage(outputImage, from: inputImage.extent) else { return UIImage(ciImage: inputImage) }
         
         
         return UIImage(cgImage: renderedImage)
@@ -137,6 +143,10 @@ class PhotoFilterViewController: UIViewController {
 	@IBAction func saturationChanged(_ sender: Any) {
         updateImage()
 	}
+    
+    @IBAction func blurChanged(_ sender: Any) {
+        updateImage()
+    }
 }
 
 extension PhotoFilterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
