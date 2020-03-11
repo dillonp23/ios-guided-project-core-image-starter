@@ -47,6 +47,9 @@
                                                                 </connections>
                                                             </slider>
                                                         </subviews>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="20.5" id="25Q-Pl-eJg"/>
+                                                        </constraints>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="ATz-BK-Hv7" userLabel="Contrast Stack View">
                                                         <rect key="frame" x="0.0" y="40.5" width="382" height="20.5"/>
@@ -64,6 +67,9 @@
                                                                 </connections>
                                                             </slider>
                                                         </subviews>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="20.5" id="Lh2-7N-aBc"/>
+                                                        </constraints>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="xga-tt-xR7" userLabel="Saturation Stack View">
                                                         <rect key="frame" x="0.0" y="81" width="382" height="20.5"/>
@@ -81,6 +87,9 @@
                                                                 </connections>
                                                             </slider>
                                                         </subviews>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="20.5" id="uii-nz-8Qo"/>
+                                                        </constraints>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="J6g-Ej-D2W" userLabel="Blur Stack View">
                                                         <rect key="frame" x="0.0" y="121.5" width="382" height="20.5"/>
@@ -98,6 +107,9 @@
                                                                 </connections>
                                                             </slider>
                                                         </subviews>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="20.5" id="ceW-Ag-6Tu"/>
+                                                        </constraints>
                                                     </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nbg-Oj-7Ub">
                                                         <rect key="frame" x="0.0" y="162" width="382" height="60"/>
