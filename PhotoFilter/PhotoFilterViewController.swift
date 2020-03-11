@@ -34,7 +34,8 @@ class PhotoFilterViewController: UIViewController {
     }
     
     private let context = CIContext()
-    private let filter = CIFilter.colorControls()
+    private let colorControlsFilter = CIFilter.colorControls()
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,12 +45,12 @@ class PhotoFilterViewController: UIViewController {
     
     private func image(byFiltering inputImage: CIImage) -> UIImage {
         
-        filter.inputImage = inputImage
-        filter.saturation = saturationSlider.value
-        filter.brightness = brightnessSlider.value
-        filter.contrast = contrastSlider.value
+        colorControlsFilter.inputImage = inputImage
+        colorControlsFilter.saturation = saturationSlider.value
+        colorControlsFilter.brightness = brightnessSlider.value
+        colorControlsFilter.contrast = contrastSlider.value
         
-        guard let outputImage = filter.outputImage else { return UIImage(ciImage: inputImage) }
+        guard let outputImage = colorControlsFilter.outputImage else { return UIImage(ciImage: inputImage) }
         
         guard let renderedImage = context.createCGImage(outputImage, from: outputImage.extent) else { return UIImage(ciImage: inputImage) }
         
@@ -91,10 +92,37 @@ class PhotoFilterViewController: UIViewController {
         
     }
     
-	@IBAction func savePhotoButtonPressed(_ sender: UIButton) {
-		// TODO: Save to photo library
-	}
-	
+    @IBAction func savePhotoButtonPressed(_ sender: UIButton) {
+        // TODO: Save to photo library
+        guard let originalImage = originalImage, let cgImage = originalImage.cgImage else { return }
+        
+        let processedImage = self.image(byFiltering: CIImage(cgImage: cgImage))
+        
+        PHPhotoLibrary.requestAuthorization { (status) in
+            guard status == .authorized else { return // you didnt give permission, please open settings to give permission }
+                
+                PHPhotoLibrary.shared().performChanges({
+                    PHAssetCreationRequest.creationRequestForAsset(from: processedImage)
+                }) { (success, error) in
+                    if let error = error {
+                        print("Error saving photo: \(error)")
+                        NSLog("%@", "Error saving photo: \(error)") // need percent @ to prevent bug when using NSlog and string interpolation
+                        return
+                    }
+                    
+                    DispatchQueue.main.async {
+                        self.presentSuccessfulSaveAlert()
+                    }
+                }
+            }
+        }
+    }
+    
+    private func presentSuccessfulSaveAlert() {
+        let alert = UIAlertController(title: "Photo Saved!", message: "The photo has been saved to your Photo Library!", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
 
 	// MARK: Slider events
 	
